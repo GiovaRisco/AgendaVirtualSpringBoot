@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://thymeleaf.org">
+    <head>
+        <title>Agenda Virtual</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+              integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+    <body>
+        <div class="container text-center">
+            
+            <div class="p-5 bg-light rounded shadow mb-5 mt-5"
+                 style="background: url('/bannerAgenda.svg') no-repeat right; background-size: contain ; margin: 10px">
+                <h1 class="text-primary display-5">Bienvenido a mi agenda</h1>
+            </div>
+            
+            <h1>Mis Contactos</h1>
+
+            <div class="alert alert-success alert-dismissible mt-3" th:if="${msgExito ne null}">
+                [[${msgExito}]]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div class="text-end">
+                <a href="/nuevo" class="btn btn-primary">
+                    <i class="fa fa-plus "></i> Registrar Contacto
+                </a>
+            </div>
+
+            <form action="" method="get" autocomplete="off">
+                <div class="row">
+                    <div class=" col-lg-3 col-md-4">
+                        <div class="input-group mb-3">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon1">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <input type="text" class="form-control" name="busqueda" placeholder="Buscar por nombre" th:value="${param.busqueda}" >
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+            <div class="container mt-4">
+                <table class="table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Fecha Nacimiento</th>
+                            <th scope="col">Telefono</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Fecha Registro</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="contacto: ${contactos}">
+                            <td th:text="${contacto.idContacto}"></td>
+                            <td th:text="${contacto.nombre}">Mark</td>
+                            <td th:text="${#temporals.format(contacto.fechaNacimiento,'dd/MM/YYYY')}">Otto</td>
+                            <td th:text="${contacto.telefono}">@mdo</td>
+                            <td th:text="${contacto.email}">@mdo</td>
+                            <td th:text="${#temporals.format(contacto.fechaRegistro,'dd/MM/YYYY hh:mm a')}">@mdo</td>
+                            <td>
+                                <a th:href="@{/editar/{id}(id=${contacto.idContacto})}" class="btn btn-warning">Editar</a>
+                                <button class="btn btn-danger" onclick="eliminarContacto(this)">
+                                    Eliminar
+                                </button>
+                                <form th:action="@{/eliminar/{id}(id=${contacto.idContacto})}" method="post">
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div sd:pagination-summary=""></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <nav class="pull-right">
+                            <ul class="pagination"  sd:pagination="full">
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script>
+                                    function eliminarContacto(element) {
+                                        let respuesta = confirm("Estas seguro de eliminar , este registro?");
+                                        if(respuesta){
+                                            element.nextElementSibling.submit();
+                                        }else{
+                                            alert("Has cancelado la accion");
+                                        }
+                                       
+                                    }
+        </script>
+    </body>
+</html>
